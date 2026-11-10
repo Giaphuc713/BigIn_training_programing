@@ -1,0 +1,9 @@
+{
+  "priority": 1,
+  "request": {
+    "method": "GET",
+    "urlPath": "/api/tasks",
+    "queryParameters": { "status": { "equalTo": "Done" } }
+  },
+  "response": { "status": 200, "jsonBody": [] }
+}

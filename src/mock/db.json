@@ -1,5 +1,17 @@
 {
   "tasks": [
-    { "id": "1", "title": "Mocked task", "priority": "High", "status": "Todo" }
+    { "id": "1", "title": "Mocked task", "priority": "High", "status": "Todo" },
+    {
+      "id": "2",
+      "title": "Viết unit test",
+      "priority": "Low",
+      "status": "Done"
+    },
+    {
+      "id": "3",
+      "title": "Review PR",
+      "priority": "High",
+      "status": "Todo"
+    }
   ]
 }

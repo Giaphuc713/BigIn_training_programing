@@ -1,9 +1,43 @@
 services:
   mongo:
     image: mongo:7
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo-data:/data/db
+    ports: ["27017:27017"]
+    volumes: [mongo-data:/data/db]
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      retries: 10
+
+  app:
+    build: .
+    ports: ["3000:3000"]
+    environment:
+      MONGO_URL: mongodb://mongo:27017/tasktracker
+    depends_on:
+      mongo: { condition: service_healthy }
+
+  app-second:
+    build: .
+    ports: ["3001:3000"]
+    environment:
+      MONGO_URL: mongodb://mongo:27017/tasktracker
+    depends_on:
+      mongo: { condition: service_healthy }
+
+  mongo-express:
+    image: mongo-express:1.0.2
+    ports: ["8081:8081"]
+    environment:
+      ME_CONFIG_MONGODB_URL: mongodb://mongo:27017/
+      ME_CONFIG_BASICAUTH: "false"
+    depends_on:
+      mongo: { condition: service_healthy }
+
+  wiremock:
+    image: wiremock/wiremock:3.9.1
+    ports: ["8080:8080"]
+    volumes: [./src/mock/wiremock:/home/wiremock]
+    command: ["--verbose", "--global-response-templating", "--enable-stub-cors"]
+
 volumes:
   mongo-data:

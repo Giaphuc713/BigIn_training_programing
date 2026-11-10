@@ -1,0 +1,15 @@
+{
+  "request": { "method": "GET", "urlPath": "/api/tasks" },
+  "response": {
+    "status": 200,
+    "headers": { "Content-Type": "application/json" },
+    "jsonBody": [
+      {
+        "_id": "1",
+        "title": "Mocked by WireMock",
+        "priority": "High",
+        "status": "Todo"
+      }
+    ]
+  }
+}
