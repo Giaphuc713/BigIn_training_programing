@@ -1,0 +1,183 @@
+{
+  "uuid": "d94b03ae-909d-460a-a409-5c1b307b5ac5",
+  "lastMigration": 33,
+  "name": "CreateTask",
+  "endpointPrefix": "",
+  "latency": 0,
+  "port": 3001,
+  "hostname": "",
+  "folders": [],
+  "routes": [
+    {
+      "uuid": "92c459e4-f3fe-48ca-ac4d-89792ac4aaa4",
+      "type": "http",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "api/tasks",
+      "responses": [
+        {
+          "uuid": "193141f1-8f9b-478f-a476-39faea2c56b8",
+          "body": "[\r\n{{#repeat 5}}\r\n{\r\n\"_id\": \"{{faker 'string.uuid'}}\",\r\n\"title\": \"{{faker 'lorem.sentence' 4}}\",\r\n\"priority\": \"{{oneOf (array 'Low' 'Medium' 'High')}}\",\r\n\"status\": \"{{oneOf (array 'Todo' 'In Progress' 'Done')}}\"\r\n}\r\n{{/repeat}}\r\n]\r\n\r\n",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "cfb305bd-d4da-4002-b57e-2cf228ff1fa9",
+          "body": "{\"error\" : \"Server Error\"}",
+          "latency": 0,
+          "statusCode": 500,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "query",
+              "modifier": "status",
+              "value": "Error",
+              "invert": false,
+              "operator": "equals"
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "2804cc94-aa74-47d6-b85f-488366010ede",
+      "type": "http",
+      "documentation": "",
+      "method": "post",
+      "endpoint": "api/tasks",
+      "responses": [
+        {
+          "uuid": "7d8c9714-b3a0-48af-acd6-03b7f566c777",
+          "body": "{{{stringify (bodyRaw)}}}",
+          "latency": 0,
+          "statusCode": 201,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "088f5c09-d470-4b33-b79f-8707c6bcc24a",
+          "body": "{\"error\": \"Title is required\"}",
+          "latency": 0,
+          "statusCode": 400,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "body",
+              "modifier": "title",
+              "value": "",
+              "invert": false,
+              "operator": "equals"
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    }
+  ],
+  "rootChildren": [
+    {
+      "type": "route",
+      "uuid": "92c459e4-f3fe-48ca-ac4d-89792ac4aaa4"
+    },
+    {
+      "type": "route",
+      "uuid": "2804cc94-aa74-47d6-b85f-488366010ede"
+    }
+  ],
+  "proxyMode": false,
+  "proxyHost": "",
+  "proxyRemovePrefix": false,
+  "tlsOptions": {
+    "enabled": false,
+    "type": "CERT",
+    "pfxPath": "",
+    "certPath": "",
+    "keyPath": "",
+    "caPath": "",
+    "passphrase": ""
+  },
+  "cors": true,
+  "headers": [
+    {
+      "key": "Content-Type",
+      "value": "application/json"
+    },
+    {
+      "key": "Access-Control-Allow-Origin",
+      "value": "*"
+    },
+    {
+      "key": "Access-Control-Allow-Methods",
+      "value": "GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS"
+    },
+    {
+      "key": "Access-Control-Allow-Headers",
+      "value": "Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With"
+    }
+  ],
+  "proxyReqHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "proxyResHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "data": [],
+  "callbacks": []
+}

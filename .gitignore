@@ -6,9 +6,9 @@ node_modules/
 npm-debug.log*
 
 *.md
+!DOCKER_CONCEPTS.md
 package-lock.json
 package.json
-
 
 
 
