@@ -1,5 +1,7 @@
 const router = require("express").Router();
-const Project = require("../models/project");
+const mongoose = require("mongoose");
+const { ApiError } = require("@/error");
+const Project = require("@/models/project");
 
 router.post("/projects", async (req, res) => {
   const project = await Project.create({
@@ -81,10 +83,13 @@ router.delete("/projects/:key/members/:userId", async (req, res) => {
   res.status(204).end();
 });
 
-router.post("/projects/:key/issues", async (req, res) => {});
-async function findProjectForAdmin(key, userId) {
-  const project = await Project.findOne({ key });
+module.exports = router;
 
+async function findProjectForAdmin(key, userId) {
+  const project = await Project.findOne({
+    key,
+    "members.userId": userId,
+  });
   if (!project) {
     throw new ApiError(404, "PROJECT_NOT_FOUND", "Project not found");
   }
@@ -92,12 +97,9 @@ async function findProjectForAdmin(key, userId) {
   const membership = project.members.find((member) =>
     member.userId.equals(userId),
   );
-
-  if (!membership || membership.role !== "Admin") {
+  if (membership.role !== "Admin") {
     throw new ApiError(403, "FORBIDDEN", "Project admin permission required");
   }
 
   return project;
 }
-
-module.exports = router;

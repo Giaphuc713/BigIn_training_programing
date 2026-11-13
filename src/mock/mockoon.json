@@ -4,7 +4,6 @@
   "name": "CreateTask",
   "endpointPrefix": "",
   "latency": 0,
-  "port": 3001,
   "hostname": "",
   "folders": [],
   "routes": [

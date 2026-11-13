@@ -4,14 +4,16 @@ const express = require("express");
 const mongoose = require("mongoose");
 const userRoutes = require("@/routes/user");
 const projectRoutes = require("@/routes/project");
+const issueRoutes = require("@/routes/issues");
 const auth = require("@/middleware/auth");
-const { errorHandler } = require("@/error");
+const errorHandler = require("@/middleware/errorHandler");
 
 const app = express();
 app.use(express.json());
 
 app.get("/api/health", (req, res) => res.json({ status: "ok" }));
 app.use("/api", auth, projectRoutes);
+app.use("/api", auth, issueRoutes);
 app.use("/api", userRoutes);
 app.use(errorHandler);
 
