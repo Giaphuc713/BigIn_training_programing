@@ -1,17 +1,14 @@
 {
-  "tasks": [
-    { "id": "1", "title": "Mocked task", "priority": "High", "status": "Todo" },
-    {
-      "id": "2",
-      "title": "Viết unit test",
-      "priority": "Low",
-      "status": "Done"
-    },
-    {
-      "id": "3",
-      "title": "Review PR",
-      "priority": "High",
-      "status": "Todo"
-    }
-  ]
+  "issues": {
+    "id": "1",
+    "type": "Story",
+    "title": "User can log in",
+    "description": "Login with email",
+    "priority": "Low",
+    "assigneeId": "6400000000000000000000a2",
+    "labels": ["backend"],
+    "storyPoints": 8,
+    "dueDate": "2026-12-15T00:00:00.000Z",
+    "projectId": "WEB"
+  }
 }

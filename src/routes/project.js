@@ -23,6 +23,8 @@ router.get("/projects/:key", async (req, res) => {
     key,
     "members.userId": req.user._id,
   }).populate("members.userId", "displayName email");
+  console.log("UserId", req.user._id);
+
   if (!project) {
     throw new ApiError(404, "PROJECT_NOT_FOUND", "Project not found");
   }

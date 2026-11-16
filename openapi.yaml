@@ -1,0 +1,170 @@
+openapi: 3.0.3
+info: { title: Issue Tracker API, version: 0.1.0 }
+servers: [{ url: http://localhost:3000/api }]
+security:
+  - UserIdHeader: []
+
+paths:
+  /projects:
+    post:
+      summary: PRJ-01 Create project (caller becomes Admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ProjectCreate" }
+      responses:
+        "201":
+          {
+            description: Created,
+            content:
+              {
+                application/json:
+                  { schema: { $ref: "#/components/schemas/Project" } },
+              },
+          }
+        "400": { $ref: "#/components/responses/Error" }
+        "401": { $ref: "#/components/responses/Error" }
+        "409": { $ref: "#/components/responses/Error" }
+    get:
+      summary: PRJ-02 List projects the caller belongs to
+      responses:
+        "200":
+          {
+            description: OK,
+            content:
+              {
+                application/json:
+                  {
+                    schema:
+                      {
+                        type: array,
+                        items: { $ref: "#/components/schemas/Project" },
+                      },
+                  },
+              },
+          }
+        "401": { $ref: "#/components/responses/Error" }
+  /projects/{key}:
+    get:
+      summary: PRJ-03 Get one project with members
+      responses:
+        "200":
+          {
+            description: OK,
+            content:
+              {
+                application/json:
+                  { schema: { $ref: "#/components/schemas/ProjectDetail" } },
+              },
+          }
+        "401": { $ref: "#/components/responses/Error" }
+        "404": { $ref: "#/components/responses/Error" }
+  /projects/{key}/members:
+    post:
+      summary: PRJ-04 Add member (Admin only)
+      responses:
+        "201":
+          {
+            description: Added,
+            content:
+              {
+                application/json:
+                  { schema: { $ref: "#/components/schemas/Project" } },
+              },
+          }
+        "400": { $ref: "#/components/responses/Error" }
+        "401": { $ref: "#/components/responses/Error" }
+        "403": { $ref: "#/components/responses/Error" }
+        "404": { $ref: "#/components/responses/Error" }
+        "409": { $ref: "#/components/responses/Error" }
+  /projects/{key}/members/{userId}:
+    delete:
+      summary: PRJ-04 Remove member (Admin only)
+      responses:
+        "204": { description: Removed }
+        "400": { $ref: "#/components/responses/Error" }
+        "401": { $ref: "#/components/responses/Error" }
+        "403": { $ref: "#/components/responses/Error" }
+        "404": { $ref: "#/components/responses/Error" }
+
+components:
+  securitySchemes:
+    UserIdHeader:
+      type: apiKey
+      in: header
+      name: X-User-Id
+  responses:
+    Error:
+      description: Standard error body with status, error, details error.
+      content:
+        { application/json: { schema: { $ref: "#/components/schemas/Error" } } }
+  schemas:
+    ObjectId: { type: string, pattern: "^[a-f0-9]{24}$" }
+    Role: { type: string, enum: [Admin, Member, Viewer] }
+    Error:
+      type: object
+      required: [error]
+      additionalProperties: false
+      properties:
+        error:
+          type: object
+          required: [code, message]
+          additionalProperties: false
+          properties:
+            code: { type: string }
+            message: { type: string }
+            details: {}
+    ProjectCreate:
+      type: object
+      required: [key, name]
+      properties:
+        key: { type: string, pattern: "^[A-Za-z]{2,10}$" }
+        name: { type: string, minLength: 3, maxLength: 100 }
+        description: { type: string, maxLength: 1000 }
+    Project:
+      type: object
+      required: [_id, key, name, members, nextIssueNumber, createdAt, updatedAt]
+      additionalProperties: false
+      properties:
+        _id: { $ref: "#/components/schemas/ObjectId" }
+        key: { type: string, pattern: "^[A-Z]{2,10}$" }
+        name: { type: string, minLength: 3, maxLength: 100 }
+        description: { type: string, maxLength: 1000 }
+        members:
+          type: array
+          items:
+            type: object
+            required: [userId, role]
+            additionalProperties: false
+            properties:
+              userId: { $ref: "#/components/schemas/ObjectId" }
+              role: { $ref: "#/components/schemas/Role" }
+        nextIssueNumber: { type: integer, minimum: 1 }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+    ProjectDetail: # GET /projects/:key populate userId thành object
+      allOf:
+        - $ref: "#/components/schemas/ProjectBase"
+    ProjectBase:
+      type: object
+      required: [_id, key, name, members, nextIssueNumber]
+      properties:
+        _id: { $ref: "#/components/schemas/ObjectId" }
+        key: { type: string }
+        name: { type: string }
+        members:
+          type: array
+          items:
+            type: object
+            required: [userId, role]
+            properties:
+              userId:
+                type: object
+                required: [_id, displayName, email]
+                properties:
+                  _id: { $ref: "#/components/schemas/ObjectId" }
+                  displayName: { type: string }
+                  email: { type: string }
+              role: { $ref: "#/components/schemas/Role" }
+        nextIssueNumber: { type: integer, minimum: 1 }
