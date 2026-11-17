@@ -48,6 +48,20 @@ test.describe("POST /projects/:key/issues", () => {
     await validateSchema({ request }, body, schemaDoc.components.schemas.Issue);
   });
 
+  test("[Negative]  - ISS-01 Create issue with type [Drama]", async ({
+    request,
+  }) => {
+    const payload = { title: "Create the firsts issue", type: "Drama" };
+
+    const response = await request.post(`${baseURL}/projects/${key}/issues`, {
+      headers,
+      data: payload,
+    });
+    expect(response.status()).toBe(400);
+    const body = await response.json();
+    await validateSchema({ request }, body, schemaDoc.components.schemas.Error);
+  });
+
   test.afterAll(async ({ request }) => {
     // Cleanup project after each test
     const response = await request.delete(`${baseURL}/projects/${key}`, {

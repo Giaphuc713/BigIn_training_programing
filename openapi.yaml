@@ -243,6 +243,7 @@ components:
       additionalProperties: false
       properties:
         _id: { type: string, pattern: "^[a-f0-9]{24}$" }
+        __v: { type: integer, minimum: 0 }
         key: { type: string, pattern: "^[A-Z]{2,10}$" }
         name: { type: string, minLength: 3, maxLength: 100 }
         description: { type: string, maxLength: 1000 }
@@ -359,16 +360,17 @@ components:
         ]
       properties:
         _id: { type: string, pattern: "^[a-f0-9]{24}$" }
+        __v: { type: integer, minimum: 0 }
         projectId: { type: string, pattern: "^[a-f0-9]{24}$" }
         number: { type: integer, minimum: 1 }
         key: { type: string, pattern: "^[A-Z]{2,10}-[0-9]+$" }
         type: { type: string, enum: [Story, Task, Bug] }
         title: { type: string, minLength: 3, maxLength: 200 }
         description: { type: string, maxLength: 5000 }
-        status: { type: string, enum: ["To Do", "In Progress", "In Review", "Done"] }
+        status:
+          { type: string, enum: ["To Do", "In Progress", "In Review", "Done"] }
         priority: { type: string, enum: [Low, Medium, High] }
-        assigneeId:
-          { type: string, pattern: "^[a-f0-9]{24}$", nullable: true }
+        assigneeId: { type: string, pattern: "^[a-f0-9]{24}$", nullable: true }
         reporterId: { type: string, pattern: "^[a-f0-9]{24}$" }
         labels:
           type: array

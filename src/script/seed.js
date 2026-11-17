@@ -46,7 +46,7 @@ async function main() {
     },
   ]);
 
-  // 4. Issues: 8 cho WEB, 4 cho MOB, đủ 4 trạng thái
+  // 4. Issues: 9 issue WEB hiện có và 4 issue MOB, đủ 4 trạng thái.
   const webItems = [
     {
       type: "Story",
@@ -112,7 +112,32 @@ async function main() {
       assigneeId: dan._id,
       reporterId: bob._id,
     },
+    {
+      type: "Bug",
+      title: "Login button misaligned",
+      status: "To Do",
+      priority: "Low",
+      assigneeId: null,
+      reporterId: bob._id,
+      labels: ["frontend", "login"],
+    },
   ];
+  const iss06Items = Array.from({ length: 25 }, (_, index) => ({
+    type: ["Story", "Task", "Bug"][index % 3],
+    title: `ISS-06 list fixture ${index + 1}`,
+    status: "In Progress",
+    priority: "Low",
+    assigneeId: index % 2 === 0 ? bob._id : alice._id,
+    reporterId: alice._id,
+  }));
+  const iss06MediumItems = Array.from({ length: 20 }, (_, index) => ({
+    type: ["Story", "Task", "Bug"][index % 3],
+    title: `ISS-06 medium fixture ${index + 1}`,
+    status: "In Progress",
+    priority: "Medium",
+    assigneeId: index % 2 === 0 ? bob._id : alice._id,
+    reporterId: alice._id,
+  }));
   const mobItems = [
     {
       type: "Story",
@@ -158,14 +183,17 @@ async function main() {
     }));
 
   const issues = await Issue.insertMany([
-    ...build(web, webItems),
+    ...build(web, [...webItems, ...iss06Items, ...iss06MediumItems]),
     ...build(mob, mobItems),
   ]);
 
   // 5. Đồng bộ nextIssueNumber để khớp số issue đã tạo
   await Project.updateOne(
     { _id: web._id },
-    { nextIssueNumber: webItems.length + 1 },
+    {
+      nextIssueNumber:
+        webItems.length + iss06Items.length + iss06MediumItems.length + 1,
+    },
   );
   await Project.updateOne(
     { _id: mob._id },
