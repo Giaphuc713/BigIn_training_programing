@@ -55,7 +55,7 @@ const issueSchema = new mongoose.Schema(
     dueDate: { type: Date, default: null },
     resolvedAt: { type: Date, default: null },
   },
-  { timestamps: true },
+  { timestamps: true, versionKey: false },
 );
 
 module.exports = mongoose.model("Issue", issueSchema);

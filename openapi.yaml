@@ -88,6 +88,110 @@ paths:
         "403": { $ref: "#/components/responses/Error" }
         "404": { $ref: "#/components/responses/Error" }
 
+  /projects/:key/issues:
+    post:
+      summary: ISS-01 Create issue (API sets key, status To Do, reporterId)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/IssueCreate" }
+      responses:
+        "201":
+          {
+            description: Created,
+            content:
+              {
+                application/json:
+                  { schema: { $ref: "#/components/schemas/Issue" } },
+              },
+          }
+        "400": { $ref: "#/components/responses/Error" }
+        "401": { $ref: "#/components/responses/Error" }
+        "404": { $ref: "#/components/responses/Error" }
+    get:
+      summary: ISS-06 List issues (filter, sort, paginate)
+      responses:
+        "200":
+          {
+            description: OK,
+            content:
+              {
+                application/json:
+                  { schema: { $ref: "#/components/schemas/IssueList" } },
+              },
+          }
+        "400": { $ref: "#/components/responses/Error" }
+        "401": { $ref: "#/components/responses/Error" }
+        "404": { $ref: "#/components/responses/Error" }
+  /issues/{issueKey}:
+    parameters:
+      - $ref: "#/components/parameters/IssueKey"
+    get:
+      summary: ISS-02 Get one issue
+      responses:
+        "200":
+          {
+            description: OK,
+            content:
+              {
+                application/json:
+                  { schema: { $ref: "#/components/schemas/Issue" } },
+              },
+          }
+        "401": { $ref: "#/components/responses/Error" }
+        "404": { $ref: "#/components/responses/Error" }
+    patch:
+      summary: ISS-03 Update editable fields (status/key/unknown fields are rejected)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/IssuePatch" }
+      responses:
+        "200":
+          {
+            description: Updated,
+            content:
+              {
+                application/json:
+                  { schema: { $ref: "#/components/schemas/Issue" } },
+              },
+          }
+        "400": { $ref: "#/components/responses/Error" }
+        "401": { $ref: "#/components/responses/Error" }
+        "404": { $ref: "#/components/responses/Error" }
+    delete:
+      summary: ISS-05 Delete issue and its comments (Admin only)
+      responses:
+        "204": { description: Deleted }
+        "401": { $ref: "#/components/responses/Error" }
+        "403": { $ref: "#/components/responses/Error" }
+        "404": { $ref: "#/components/responses/Error" }
+  /issues/{issueKey}/transitions:
+    parameters:
+      - $ref: "#/components/parameters/IssueKey"
+    post:
+      summary: ISS-04 Change status along the 6 allowed transitions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/Transition" }
+      responses:
+        "200":
+          {
+            description: Transitioned,
+            content:
+              {
+                application/json:
+                  { schema: { $ref: "#/components/schemas/Issue" } },
+              },
+          }
+        "400": { $ref: "#/components/responses/Error" }
+        "401": { $ref: "#/components/responses/Error" }
+        "404": { $ref: "#/components/responses/Error" }
+        "422": { $ref: "#/components/responses/Error" }
 components:
   securitySchemes:
     UserIdHeader:
@@ -99,6 +203,17 @@ components:
       description: Standard error body with status, error, details error.
       content:
         { application/json: { schema: { $ref: "#/components/schemas/Error" } } }
+  parameters:
+    IssueKey:
+      name: issueKey
+      in: path
+      required: true
+      schema: { type: string, pattern: "^[A-Z]{2,10}-[0-9]+$" }
+    ProjectKey:
+      name: key
+      in: path
+      required: true
+      schema: { type: string, pattern: "^[A-Za-z]{2,10}$" }
   schemas:
     ObjectId: { type: string, pattern: "^[a-f0-9]{24}$" }
     Role: { type: string, enum: [Admin, Member, Viewer] }
@@ -127,7 +242,7 @@ components:
       required: [_id, key, name, members, nextIssueNumber, createdAt, updatedAt]
       additionalProperties: false
       properties:
-        _id: { $ref: "#/components/schemas/ObjectId" }
+        _id: { type: string, pattern: "^[a-f0-9]{24}$" }
         key: { type: string, pattern: "^[A-Z]{2,10}$" }
         name: { type: string, minLength: 3, maxLength: 100 }
         description: { type: string, maxLength: 1000 }
@@ -138,8 +253,8 @@ components:
             required: [userId, role]
             additionalProperties: false
             properties:
-              userId: { $ref: "#/components/schemas/ObjectId" }
-              role: { $ref: "#/components/schemas/Role" }
+              userId: { type: string, pattern: "^[a-f0-9]{24}$" }
+              role: { type: string, enum: [Admin, Member, Viewer] }
         nextIssueNumber: { type: integer, minimum: 1 }
         createdAt: { type: string, format: date-time }
         updatedAt: { type: string, format: date-time }
@@ -148,8 +263,8 @@ components:
       required: [userId, role]
       additionalProperties: false
       properties:
-        userId: { $ref: "#/components/schemas/ObjectId" }
-        role: { $ref: "#/components/schemas/Role" }
+        userId: { type: string, pattern: "^[a-f0-9]{24}$" }
+        role: { type: string, enum: [Admin, Member, Viewer] }
     ProjectDetail: # GET /projects/:key populate userId thành object
       allOf:
         - $ref: "#/components/schemas/ProjectBase"
@@ -175,3 +290,102 @@ components:
                   email: { type: string }
               role: { $ref: "#/components/schemas/Role" }
         nextIssueNumber: { type: integer, minimum: 1 }
+    Status:
+      { type: string, enum: ["To Do", "In Progress", "In Review", "Done"] }
+    Priority: { type: string, enum: [Low, Medium, High] }
+    IssueType: { type: string, enum: [Story, Task, Bug] }
+
+    Labels:
+      type: array
+      maxItems: 10
+      items: { type: string, minLength: 1, maxLength: 20 }
+
+    IssueCreate: # field thừa (status, key...) bị server bỏ qua nên không cấm ở đây
+      type: object
+      required: [title, type]
+      properties:
+        title: { type: string, minLength: 3, maxLength: 200 }
+        type: { $ref: "#/components/schemas/IssueType" }
+        description: { type: string, maxLength: 5000 }
+        priority: { $ref: "#/components/schemas/Priority" }
+        assigneeId:
+          { allOf: [{ $ref: "#/components/schemas/ObjectId" }], nullable: true }
+        labels: { $ref: "#/components/schemas/Labels" }
+        storyPoints: { type: integer, minimum: 0, maximum: 100, nullable: true }
+        dueDate: { type: string, format: date-time, nullable: true }
+
+    IssuePatch: # chỉ các field sửa được; field lạ → 400
+      type: object
+      additionalProperties: false
+      minProperties: 1
+      properties:
+        title: { type: string, minLength: 3, maxLength: 200 }
+        type: { $ref: "#/components/schemas/IssueType" }
+        description: { type: string, maxLength: 5000 }
+        priority: { $ref: "#/components/schemas/Priority" }
+        assigneeId:
+          { allOf: [{ $ref: "#/components/schemas/ObjectId" }], nullable: true }
+        labels: { $ref: "#/components/schemas/Labels" }
+        storyPoints: { type: integer, minimum: 0, maximum: 100, nullable: true }
+        dueDate: { type: string, format: date-time, nullable: true }
+
+    Transition:
+      type: object
+      required: [to]
+      properties:
+        to: { $ref: "#/components/schemas/Status" }
+
+    Issue:
+      type: object
+      additionalProperties: false
+      required:
+        [
+          _id,
+          projectId,
+          number,
+          key,
+          type,
+          title,
+          status,
+          priority,
+          assigneeId,
+          reporterId,
+          labels,
+          storyPoints,
+          dueDate,
+          resolvedAt,
+          createdAt,
+          updatedAt,
+        ]
+      properties:
+        _id: { type: string, pattern: "^[a-f0-9]{24}$" }
+        projectId: { type: string, pattern: "^[a-f0-9]{24}$" }
+        number: { type: integer, minimum: 1 }
+        key: { type: string, pattern: "^[A-Z]{2,10}-[0-9]+$" }
+        type: { type: string, enum: [Story, Task, Bug] }
+        title: { type: string, minLength: 3, maxLength: 200 }
+        description: { type: string, maxLength: 5000 }
+        status: { type: string, enum: ["To Do", "In Progress", "In Review", "Done"] }
+        priority: { type: string, enum: [Low, Medium, High] }
+        assigneeId:
+          { type: string, pattern: "^[a-f0-9]{24}$", nullable: true }
+        reporterId: { type: string, pattern: "^[a-f0-9]{24}$" }
+        labels:
+          type: array
+          maxItems: 10
+          items: { type: string, minLength: 1, maxLength: 20 }
+        storyPoints: { type: integer, minimum: 0, maximum: 100, nullable: true }
+        dueDate: { type: string, format: date-time, nullable: true }
+        resolvedAt: { type: string, format: date-time, nullable: true }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+
+    IssueList:
+      type: object
+      additionalProperties: false
+      required: [items, total, page, pageSize]
+      properties:
+        items: { type: array, items: { $ref: "#/components/schemas/Issue" } }
+        total: { type: integer, minimum: 0 }
+        page: { type: integer, minimum: 1 }
+        pageSize: { type: integer, minimum: 1, maximum: 100 }

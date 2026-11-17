@@ -79,11 +79,12 @@ router.delete("/projects/:key/members/:userId", async (req, res) => {
   const key = req.params.key.trim().toUpperCase();
   const userId = req.params.userId;
   const project = await findProjectForAdmin(key, req.user._id);
-
+  console.log("MEMBERID", userId);
+  console.log("key", key);
   const memberIndex = project.members.findIndex((member) =>
     member.userId.equals(userId),
   );
-
+  console.log("memberIndex value", memberIndex);
   if (memberIndex === -1) {
     throw new ApiError(404, "MEMBER_NOT_FOUND", "Project member not found");
   }

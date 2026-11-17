@@ -154,9 +154,9 @@ router.post("/projects/:key/issues", async (req, res) => {
     throw new ApiError(404, "PROJECT_NOT_FOUND", "Project not found");
   }
 
-  const isMember = project.members.some((member) => {
-    member.userId.equals(req.user._id);
-  });
+  const isMember = project.members.some((member) =>
+    member.userId.equals(req.user._id),
+  );
 
   if (!isMember) {
     throw new ApiError(403, "FORBIDDEN", "Project member is required");
@@ -215,8 +215,8 @@ router.get("/projects/:key/issues", async (req, res) => {
   }
   const sortOrder = sortBy === "priority" ? 1 : -1;
 
-  // Filter 
-  const filter = { projectId: project._id }
+  // Filter
+  const filter = { projectId: project._id };
   const { status, priority, type, assigneeId, label } = req.query;
 
   const VALID_STATUSES = new Set(["To Do", "In Progress", "In Review", "Done"]);
@@ -247,14 +247,17 @@ router.get("/projects/:key/issues", async (req, res) => {
 
   //5. Query
   const skip = (page - 1) * pageSize;
-  const [items, total] = await Promise.all([Issue.find(filter).sort({ [sortBy]: sortOrder }).skip(skip).limit(pageSize), Issue.countDocuments(filter)]);
+  const [items, total] = await Promise.all([
+    Issue.find(filter)
+      .sort({ [sortBy]: sortOrder })
+      .skip(skip)
+      .limit(pageSize),
+    Issue.countDocuments(filter),
+  ]);
 
   // Response
   res.json({ items, total, page, pageSize });
-
 });
-
-
 
 module.exports = router;
 

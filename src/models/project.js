@@ -37,7 +37,7 @@ const projectSchema = new mongoose.Schema(
     members: [memberSchema],
     nextIssueNumber: { type: Number, default: 1, min: 1 },
   },
-  { timestamps: true },
+  { timestamps: true, versionKey: false },
 );
 
 module.exports = mongoose.model("Project", projectSchema);
