@@ -31,6 +31,14 @@ router.get("/projects/:key", async (req, res) => {
   res.json(project);
 });
 
+router.delete("/projects/:key", async (req, res) => {
+  const key = req.params.key.trim().toUpperCase();
+  const project = await findProjectForAdmin(key, req.user._id);
+
+  await project.deleteOne();
+  res.status(204).end();
+});
+
 router.post("/projects/:key/members", async (req, res) => {
   const key = req.params.key.trim().toUpperCase();
 

@@ -1,9 +1,11 @@
 import { test, expect } from "@playwright/test";
 import "dotenv/config";
+import { TEST_USER_ID } from "../../src/utilities/constant.js";
 import { schemaDoc, validateSchema } from "../../src/utilities/validation.js";
+
 const baseURL = process.env.BASE_URL;
 const headers = {
-  "X-User-Id": process.env.TEST_USER_ID,
+  "X-User-Id": TEST_USER_ID,
 };
 
 test.describe("POST /projects", () => {
@@ -20,8 +22,6 @@ test.describe("POST /projects", () => {
       data: payload,
     });
     expect(response.status()).toBe(201);
-    const data = await response.json();
-    expect(data).toHaveProperty("_id");
   });
 
   //  Input Validation

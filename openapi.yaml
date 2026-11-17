@@ -70,7 +70,7 @@ paths:
             content:
               {
                 application/json:
-                  { schema: { $ref: "#/components/schemas/Project" } },
+                  { schema: { $ref: "#/components/schemas/ProjectMember" } },
               },
           }
         "400": { $ref: "#/components/responses/Error" }
@@ -143,6 +143,13 @@ components:
         nextIssueNumber: { type: integer, minimum: 1 }
         createdAt: { type: string, format: date-time }
         updatedAt: { type: string, format: date-time }
+    ProjectMember:
+      type: object
+      required: [userId, role]
+      additionalProperties: false
+      properties:
+        userId: { $ref: "#/components/schemas/ObjectId" }
+        role: { $ref: "#/components/schemas/Role" }
     ProjectDetail: # GET /projects/:key populate userId thành object
       allOf:
         - $ref: "#/components/schemas/ProjectBase"
