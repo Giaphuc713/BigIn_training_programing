@@ -1,6 +1,10 @@
 import { test, expect, request as apiRequest } from "@playwright/test";
 import "dotenv/config";
-import { TEST_USER_ID, ISSUE_KEY } from "../../src/utilities/constant.js";
+import {
+  TEST_USER_ID,
+  MEMBER_ID,
+  ISSUE_KEY,
+} from "../../src/utilities/constant.js";
 import { schemaDoc, validateSchema } from "../../src/utilities/validation.js";
 
 const baseURL = process.env.BASE_URL;
@@ -37,7 +41,18 @@ test.describe("PATCH /comments/:id", () => {
       expect(response.status()).toBe(204);
     }
   });
+  test("Return 403 when request update comment isn't author", async ({
+    request,
+  }) => {
+    const response = await request.patch(`${baseURL}/comments/${commentId}`, {
+      headers: { "X-User-Id": MEMBER_ID },
+      data: { body: "updated comment" },
+    });
 
+    expect(response.status()).toBe(403);
+    const body = await response.json();
+    await validateSchema({ request }, body, schemaDoc.components.schemas.Error);
+  });
   test("Update comment by author (happy path)", async ({ request }) => {
     const response = await request.patch(`${baseURL}/comments/${commentId}`, {
       headers,
