@@ -192,7 +192,10 @@ router.post("/projects/:key/issues", async (req, res) => {
 
 router.get("/projects/:key/issues", async (req, res) => {
   const key = req.params.key.trim().toUpperCase();
-  const project = Project.findOne({ key, "members.userId": req.user._id });
+  const project = await Project.findOne({
+    key,
+    "members.userId": req.user._id,
+  });
   if (!project) {
     throw new ApiError(404, "PROJECT_NOT_FOUND", "project not found");
   }
@@ -204,7 +207,7 @@ router.get("/projects/:key/issues", async (req, res) => {
   }
 
   //Sort By
-  const sortBy = req.query.sort === underfine ? "createdAt" : req.query.sort;
+  const sortBy = req.query.sort ?? "createdAt";
   const sortField = new Set(["createdAt", "priority", "dueDate"]);
   if (!sortField.has(sortBy)) {
     throw new ApiError(
@@ -238,10 +241,10 @@ router.get("/projects/:key/issues", async (req, res) => {
     filter.type = type;
   }
 
-  if (assigneedId !== underfine) {
+  if (assigneeId !== undefined) {
     filter.assigneeId = assigneeId;
   }
-  if (label !== underfine) {
+  if (label !== undefined) {
     filter.label = label;
   }
 
