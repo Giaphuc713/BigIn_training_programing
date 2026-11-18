@@ -14,6 +14,17 @@ function errorHandler(err, req, res, next) {
   }
 
   if (err instanceof ApiError) {
+    console.warn(
+      JSON.stringify({
+        level: "warn",
+        type: "api_error",
+        method: req.method,
+        path: req.originalUrl,
+        status: err.status,
+        code: err.code,
+        message: err.message,
+      }),
+    );
     return send(res, err.status, err.code, err.message, err.details);
   }
 

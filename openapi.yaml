@@ -192,6 +192,82 @@ paths:
         "401": { $ref: "#/components/responses/Error" }
         "404": { $ref: "#/components/responses/Error" }
         "422": { $ref: "#/components/responses/Error" }
+  /issues/{issueKey}/comments:
+    parameters:
+      - $ref: "#/components/parameters/IssueKey"
+    post:
+      summary: CMT-01 Add a comment (author is the caller)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CommentBody" }
+      responses:
+        "201":
+          {
+            description: Created,
+            content:
+              {
+                application/json:
+                  { schema: { $ref: "#/components/schemas/Comment" } },
+              },
+          }
+        "400": { $ref: "#/components/responses/Error" }
+        "401": { $ref: "#/components/responses/Error" }
+        "404": { $ref: "#/components/responses/Error" }
+    get:
+      summary: CMT-01 List comments, oldest first
+      responses:
+        "200":
+          {
+            description: OK,
+            content:
+              {
+                application/json:
+                  {
+                    schema:
+                      {
+                        type: array,
+                        items: { $ref: "#/components/schemas/Comment" },
+                      },
+                  },
+              },
+          }
+        "401": { $ref: "#/components/responses/Error" }
+        "404": { $ref: "#/components/responses/Error" }
+
+  /comments/{id}:
+    parameters:
+      - $ref: "#/components/parameters/CommentId"
+    patch:
+      summary: CMT-02 Edit a comment (author only)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CommentBody" }
+      responses:
+        "200":
+          {
+            description: Updated,
+            content:
+              {
+                application/json:
+                  { schema: { $ref: "#/components/schemas/Comment" } },
+              },
+          }
+        "400": { $ref: "#/components/responses/Error" }
+        "401": { $ref: "#/components/responses/Error" }
+        "403": { $ref: "#/components/responses/Error" }
+        "404": { $ref: "#/components/responses/Error" }
+    delete:
+      summary: CMT-02 Delete a comment (author only)
+      responses:
+        "204": { description: Deleted }
+        "400": { $ref: "#/components/responses/Error" }
+        "401": { $ref: "#/components/responses/Error" }
+        "403": { $ref: "#/components/responses/Error" }
+        "404": { $ref: "#/components/responses/Error" }
 components:
   securitySchemes:
     UserIdHeader:
@@ -211,6 +287,12 @@ components:
       schema: { type: string, pattern: "^[A-Z]{2,10}-[0-9]+$" }
     ProjectKey:
       name: key
+      in: path
+      required: true
+      schema: { type: string, pattern: "^[A-Za-z]{2,10}$" }
+      parameters:
+    CommentId:
+      name: id
       in: path
       required: true
       schema: { type: string, pattern: "^[A-Za-z]{2,10}$" }
@@ -391,3 +473,20 @@ components:
         total: { type: integer, minimum: 0 }
         page: { type: integer, minimum: 1 }
         pageSize: { type: integer, minimum: 1, maximum: 100 }
+    CommentBody:
+      type: object
+      required: [body]
+      properties:
+        body: { type: string, minLength: 1, maxLength: 2000 }
+    Comment:
+      type: object
+      additionalProperties: false
+      required: [_id, issueId, authorId, body, createdAt, updatedAt]
+      properties:
+        _id: { type: string, pattern: "^[a-f0-9]{24}$" }
+        __v: { type: integer, minimum: 0 }
+        issueId: { type: string, pattern: "^[a-f0-9]{24}$" }
+        authorId: { type: string, pattern: "^[a-f0-9]{24}$" }
+        body: { type: string, minLength: 1, maxLength: 2000 }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
