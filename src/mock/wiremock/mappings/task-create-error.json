@@ -1,4 +1,0 @@
-{
-  "request": { "method": "POST", "urlPath": "/api/tasks" },
-  "response": { "status": 500, "jsonBody": { "error": "Database unavailable" } }
-}

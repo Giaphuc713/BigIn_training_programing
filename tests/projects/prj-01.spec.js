@@ -9,9 +9,20 @@ const headers = {
 };
 
 test.describe("POST /projects", () => {
+  test.beforeEach(async ({ request }) => {
+    const response = await request.delete(`${baseURL}/projects/string`, {
+      headers,
+    });
+    expect([204, 404]).toContain(response.status());
+  });
+
   // Happy path
   test("PRJ-01 - Create new project", async ({ request }) => {
-    const payload = { key: "string", name: "string", description: "string" };
+    const payload = {
+      key: "string",
+      name: "string",
+      description: "string",
+    };
     await validateSchema(
       { request },
       payload,
@@ -63,6 +74,15 @@ test.describe("POST /projects", () => {
       headers,
       data: payload,
     });
-    expect(response.status()).toBe(409);
+    expect(response.status()).toBe(201);
+
+    const duplicateResponse = await request.post(`${baseURL}/projects`, {
+      headers,
+      data: payload,
+    });
+    expect(duplicateResponse.status()).toBe(409);
+    expect(await duplicateResponse.json()).toMatchObject({
+      error: { code: "CONFLICT" },
+    });
   });
 });

@@ -5,8 +5,6 @@ const User = require("@/models/user");
 const Project = require("@/models/project");
 const Issue = require("@/models/issue");
 
-// pnpm seed:large — thêm 1000 issue vào project WEB cho performance check (NFR-04).
-// Không xoá dữ liệu của seed thường; chỉ xoá các issue large-fixture của lần chạy trước.
 const TOTAL = 1000;
 const BATCH_SIZE = 250;
 const PREFIX = "PERF-04 fixture";
@@ -24,7 +22,6 @@ async function main() {
     throw new Error('Project "WEB" chưa tồn tại. Hãy chạy `pnpm seed` trước.');
   }
 
-  // Chỉ dùng user active, là member của WEB, không phải Viewer.
   const memberIds = web.members
     .filter((m) => m.role !== "Viewer")
     .map((m) => m.userId);
@@ -88,6 +85,6 @@ async function main() {
 
 main().catch(async (err) => {
   console.error(err);
-  await mongoose.disconnect().catch(() => {});
+  await mongoose.disconnect().catch(() => { });
   process.exit(1);
 });
