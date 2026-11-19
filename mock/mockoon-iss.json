@@ -1,0 +1,304 @@
+{
+  "uuid": "17435b2e-d119-417f-8c70-2c08d9048fb8",
+  "lastMigration": 33,
+  "name": "Mockoon iss",
+  "endpointPrefix": "",
+  "latency": 0,
+  "port": 3001,
+  "hostname": "",
+  "folders": [],
+  "routes": [
+    {
+      "uuid": "ffd77ce8-52ab-4f1e-9ae6-232d01e0e38c",
+      "type": "http",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "projects/:key/issues",
+      "responses": [
+        {
+          "uuid": "b656264d-cb25-4af0-be5b-99b60fa434df",
+          "body": "{\r\n  \"items\": [\r\n    {{#repeat 5}}\r\n    {\r\n      \"_id\": \"{{faker 'database.mongodbObjectId'}}\",\r\n      \"projectId\": \"{{faker 'database.mongodbObjectId'}}\",\r\n      \"number\": {{add @index 1}},\r\n      \"key\": \"{{urlParam 'key'}}-{{add @index 1}}\",\r\n      \"type\": \"{{oneOf (array 'Story' 'Task' 'Bug')}}\",\r\n      \"title\": \"{{faker 'lorem.sentence'}}\",\r\n      \"description\": \"{{faker 'lorem.paragraph'}}\",\r\n      \"priority\": \"{{oneOf (array 'Low' 'Medium' 'High')}}\",\r\n      \"status\": \"{{queryParam 'status' 'To Do'}}\",\r\n      \"assigneeId\": \"{{faker 'database.mongodbObjectId'}}\",\r\n      \"reporterId\": \"{{faker 'database.mongodbObjectId'}}\",\r\n      \"labels\": [\"{{oneOf (array 'frontend' 'backend' 'urgent')}}\"],\r\n      \"storyPoints\": {{int 1 13}},\r\n      \"dueDate\": \"{{date '2026-11-20' '2026-12-31' \"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'\"}}\",\r\n      \"resolvedAt\": null,\r\n      \"createdAt\": \"{{now}}\",\r\n      \"updatedAt\": \"{{now}}\"\r\n    }\r\n    {{/repeat}}\r\n  ],\r\n  \"total\": 42,\r\n  \"page\": {{queryParam 'page' 1}},\r\n  \"pageSize\": {{queryParam 'pageSize' 20}}\r\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "71b1c54a-c356-41c2-ab72-e775fd0fb3c1",
+          "body": "{\n  \"error\": {\n    \"code\": \"VALIDATION_ERROR\",\n    \"message\": \"status must be one of To Do, In Progress, In Review, Done\"\n  }\n}",
+          "latency": 0,
+          "statusCode": 400,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "query",
+              "modifier": "status",
+              "value": "^(?!To Do$|In Progress$|In Review$|Done$).+$",
+              "invert": false,
+              "operator": "regex"
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "de1ebb34-e82b-4266-80d6-f1eea02c2de5",
+      "type": "http",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "issues/:issueKey",
+      "responses": [
+        {
+          "uuid": "8da49a08-8815-42ed-ba18-e1ce949ce551",
+          "body": "{\r\n  \"_id\": \"{{faker 'database.mongodbObjectId'}}\",\r\n  \"projectId\": \"{{faker 'database.mongodbObjectId'}}\",\r\n  \"number\": {{int 1 100}},\r\n  \"key\": \"{{urlParam 'issueKey'}}\",\r\n  \"type\": \"Bug\",\r\n  \"title\": \"{{faker 'lorem.sentence'}}\",\r\n  \"description\": \"{{faker 'lorem.paragraph'}}\",\r\n  \"priority\": \"High\",\r\n  \"status\": \"In Progress\",\r\n  \"assigneeId\": \"{{faker 'database.mongodbObjectId'}}\",\r\n  \"reporterId\": \"{{faker 'database.mongodbObjectId'}}\",\r\n  \"labels\": [\"backend\", \"urgent\"],\r\n  \"storyPoints\": 5,\r\n  \"dueDate\": \"{{date '2026-11-20' '2026-12-31' \"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'\"}}\",\r\n  \"resolvedAt\": null,\r\n  \"createdAt\": \"{{now}}\",\r\n  \"updatedAt\": \"{{now}}\"\r\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "27b8138e-bd6e-4133-8c09-02cab977f4e8",
+          "body": "{ \"error\": { \"code\": \"ISSUE_NOT_FOUND\", \"message\": \"Issue not found\" } }",
+          "latency": 0,
+          "statusCode": 404,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "params",
+              "modifier": "issueKey",
+              "value": "^NOPE-\\d+$",
+              "invert": false,
+              "operator": "regex"
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "18b4eff3-6649-407e-a3ff-4809c16f15db",
+          "body": "{\r\n  \"error\": {\r\n    \"code\": \"UNAUTHORIZED\",\r\n    \"message\": \"Authentication required\"\r\n  }\r\n}",
+          "latency": 0,
+          "statusCode": 401,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "header",
+              "modifier": "Authorization",
+              "value": "null",
+              "invert": false,
+              "operator": "equals"
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "fe167704-fd8e-4632-8ef1-478aab13d7d6",
+      "type": "http",
+      "documentation": "",
+      "method": "post",
+      "endpoint": "projects/:key/issues",
+      "responses": [
+        {
+          "uuid": "19a91fac-5f1a-4a24-a2c3-175c229e315f",
+          "body": "{\r\n  \"_id\": \"{{faker 'database.mongodbObjectId'}}\",\r\n  \"projectId\": \"{{faker 'database.mongodbObjectId'}}\",\r\n  \"number\": {{int 1 200}},\r\n  \"key\": \"{{urlParam 'key'}}-{{int 1 200}}\",\r\n  \"type\": \"{{body 'type' 'Task'}}\",\r\n  \"title\": \"{{body 'title' 'Untitled'}}\",\r\n  \"description\": \"{{body 'description' ''}}\",\r\n  \"priority\": \"{{body 'priority' 'Medium'}}\",\r\n  \"assigneeId\": {{#if (bodyRaw 'assigneeId')}}\"{{body 'assigneeId'}}\"{{else}}null{{/if}},\r\n  \"labels\": [{{#repeat 2}}\"{{oneOf (array 'frontend' 'backend' 'urgent')}}\"{{/repeat}}],\r\n  \"storyPoints\": {{body 'storyPoints' 3}},\r\n  \"dueDate\": {{#if (bodyRaw 'dueDate')}}\"{{body 'dueDate'}}\"{{else}}null{{/if}},\r\n  \"resolvedAt\": null,\r\n  \"status\": \"To Do\",\r\n  \"reporterId\": \"{{faker 'database.mongodbObjectId'}}\",\r\n  \"createdAt\": \"{{now}}\",\r\n  \"updatedAt\": \"{{now}}\"\r\n}",
+          "latency": 0,
+          "statusCode": 201,
+          "label": "",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "b79fb2ba-03f1-498d-a52a-9cfbd44eb7a1",
+          "body": "{ \"error\": { \"code\": \"PROJECT_NOT_FOUND\", \"message\": \"Project not found\" }}\n",
+          "latency": 0,
+          "statusCode": 404,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "params",
+              "modifier": "key",
+              "value": "Nope",
+              "invert": false,
+              "operator": "equals"
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "4de079f4-0093-4521-8380-4c02ddf2c1e5",
+          "body": "{\n  \"error\": {\n    \"code\": \"FORBIDDEN\",\n    \"message\": \"FORBIDDEN\"\n  }\n}",
+          "latency": 0,
+          "statusCode": 403,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "params",
+              "modifier": "key",
+              "value": "LOCKED",
+              "invert": false,
+              "operator": "equals"
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    }
+  ],
+  "rootChildren": [
+    {
+      "type": "route",
+      "uuid": "ffd77ce8-52ab-4f1e-9ae6-232d01e0e38c"
+    },
+    {
+      "type": "route",
+      "uuid": "de1ebb34-e82b-4266-80d6-f1eea02c2de5"
+    },
+    {
+      "type": "route",
+      "uuid": "fe167704-fd8e-4632-8ef1-478aab13d7d6"
+    }
+  ],
+  "proxyMode": false,
+  "proxyHost": "",
+  "proxyRemovePrefix": false,
+  "tlsOptions": {
+    "enabled": false,
+    "type": "CERT",
+    "pfxPath": "",
+    "certPath": "",
+    "keyPath": "",
+    "caPath": "",
+    "passphrase": ""
+  },
+  "cors": true,
+  "headers": [
+    {
+      "key": "Content-Type",
+      "value": "application/json"
+    },
+    {
+      "key": "Access-Control-Allow-Origin",
+      "value": "*"
+    },
+    {
+      "key": "Access-Control-Allow-Methods",
+      "value": "GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS"
+    },
+    {
+      "key": "Access-Control-Allow-Headers",
+      "value": "Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With"
+    }
+  ],
+  "proxyReqHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "proxyResHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "data": [],
+  "callbacks": []
+}
