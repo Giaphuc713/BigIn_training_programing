@@ -10,7 +10,7 @@ const headers = {
 test.describe("POST /issues/:issueKey/comments", () => {
   test("Add a new comment (happy path)", async ({ request }) => {
     const response = await request.post(
-      `${baseURL}/issues/${ISSUE_KEY}/comments`,
+      `${baseURL}/api/issues/${ISSUE_KEY}/comments`,
       {
         headers,
         data: { body: "new comment" },
@@ -29,7 +29,7 @@ test.describe("POST /issues/:issueKey/comments", () => {
 
   test("[List comments oldest first ]", async ({ request }) => {
     const response = await request.get(
-      `${baseURL}/issues/${ISSUE_KEY}/comments`,
+      `${baseURL}/api/issues/${ISSUE_KEY}/comments`,
       {
         headers,
       },

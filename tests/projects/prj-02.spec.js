@@ -11,7 +11,7 @@ const headers = {
 test.describe("GET /projects", () => {
   // Happy path
   test("PRJ-02 - List projects the caller belong to", async ({ request }) => {
-    const response = await request.get(`${baseURL}/projects`, {
+    const response = await request.get(`${baseURL}/api/projects`, {
       headers,
     });
     expect(response.status()).toBe(200);
@@ -26,7 +26,7 @@ test.describe("GET /projects", () => {
     request,
   }) => {
     const headers = { "X-User-Id": "" };
-    const response = await request.get(`${baseURL}/projects`, {
+    const response = await request.get(`${baseURL}/api/projects`, {
       headers,
     });
     expect(response.status()).toBe(401);

@@ -41,12 +41,9 @@ test.describe("WireMock: File stubs for four states", () => {
   test("State 1: issue list - trả về danh sách issues hợp lệ", async ({
     request,
   }) => {
-    const response = await request.get(
-      `${baseURL}/api/api/projects/WEB/issues`,
-      {
-        headers,
-      },
-    );
+    const response = await request.get(`${baseURL}/api/projects/WEB/issues`, {
+      headers,
+    });
 
     expect(response.status()).toBe(200);
     const body = await response.json();
@@ -58,12 +55,9 @@ test.describe("WireMock: File stubs for four states", () => {
   test("State 2: empty list - trả về danh sách rỗng (items: [])", async ({
     request,
   }) => {
-    const response = await request.get(
-      `${baseURL}/api/api/projects/EMPTY/issues`,
-      {
-        headers,
-      },
-    );
+    const response = await request.get(`${baseURL}/api/projects/EMPTY/issues`, {
+      headers,
+    });
 
     expect(response.status()).toBe(200);
     const body = await response.json();
@@ -82,12 +76,9 @@ test.describe("WireMock: File stubs for four states", () => {
     test.setTimeout(10000);
 
     const startTime = Date.now();
-    const response = await request.get(
-      `${baseURL}/api/api/projects/SLOW/issues`,
-      {
-        headers,
-      },
-    );
+    const response = await request.get(`${baseURL}/api/projects/SLOW/issues`, {
+      headers,
+    });
     const duration = Date.now() - startTime;
 
     expect(response.status()).toBe(200);
@@ -108,13 +99,10 @@ test.describe("WireMock: File stubs for four states", () => {
       type: "Task",
     };
 
-    const response = await request.post(
-      `${baseURL}/api/api/projects/FAIL/issues`,
-      {
-        headers,
-        data: payload,
-      },
-    );
+    const response = await request.post(`${baseURL}/api/projects/FAIL/issues`, {
+      headers,
+      data: payload,
+    });
 
     expect(response.status()).toBe(500);
     const body = await response.json();
@@ -137,12 +125,9 @@ test.describe.serial("WireMock: Stateful scenario and edge cases", () => {
   test("Edge-case 1: Ban đầu chưa gọi create -> the list shows empty", async ({
     request,
   }) => {
-    const response = await request.get(
-      `${baseURL}/api/api/projects/STATE/issues`,
-      {
-        headers,
-      },
-    );
+    const response = await request.get(`${baseURL}/api/projects/STATE/issues`, {
+      headers,
+    });
 
     expect(response.status()).toBe(200);
     const body = await response.json();
@@ -159,7 +144,7 @@ test.describe.serial("WireMock: Stateful scenario and edge cases", () => {
   }) => {
     // Bước 1: Ban đầu list rỗng (empty list)
     const initialResponse = await request.get(
-      `${baseURL}/api/api/projects/STATE/issues`,
+      `${baseURL}/api/projects/STATE/issues`,
       { headers },
     );
     expect(initialResponse.status()).toBe(200);
@@ -174,7 +159,7 @@ test.describe.serial("WireMock: Stateful scenario and edge cases", () => {
       type: "Task",
     };
     const createResponse = await request.post(
-      `${baseURL}/api/api/projects/STATE/issues`,
+      `${baseURL}/api/projects/STATE/issues`,
       {
         headers,
         data: createPayload,

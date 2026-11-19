@@ -10,7 +10,7 @@ const headers = {
 
 test.describe("POST /projects", () => {
   test.beforeEach(async ({ request }) => {
-    const response = await request.delete(`${baseURL}/projects/string`, {
+    const response = await request.delete(`${baseURL}/api/projects/string`, {
       headers,
     });
     expect([204, 404]).toContain(response.status());
@@ -28,7 +28,7 @@ test.describe("POST /projects", () => {
       payload,
       schemaDoc.components.schemas.ProjectCreate,
     );
-    const response = await request.post(`${baseURL}/projects`, {
+    const response = await request.post(`${baseURL}/api/projects`, {
       headers,
       data: payload,
     });
@@ -39,7 +39,7 @@ test.describe("POST /projects", () => {
   test("returns 400 when 'key' is missing", async ({ request }) => {
     const payload = { name: "string", description: "string" };
 
-    const response = await request.post(`${baseURL}/projects`, {
+    const response = await request.post(`${baseURL}/api/projects`, {
       headers,
       data: payload,
     });
@@ -50,7 +50,7 @@ test.describe("POST /projects", () => {
   test("returns 400 when 'name' is missing", async ({ request }) => {
     const payload = { key: "string", description: "string" };
 
-    const response = await request.post(`${baseURL}/projects`, {
+    const response = await request.post(`${baseURL}/api/projects`, {
       headers,
       data: payload,
     });
@@ -70,13 +70,13 @@ test.describe("POST /projects", () => {
       payload,
       schemaDoc.components.schemas.ProjectCreate,
     );
-    const response = await request.post(`${baseURL}/projects`, {
+    const response = await request.post(`${baseURL}/api/projects`, {
       headers,
       data: payload,
     });
     expect(response.status()).toBe(201);
 
-    const duplicateResponse = await request.post(`${baseURL}/projects`, {
+    const duplicateResponse = await request.post(`${baseURL}/api/projects`, {
       headers,
       data: payload,
     });

@@ -18,7 +18,7 @@ test.describe("PRJ-04", () => {
   test.beforeAll(async ({ request }) => {
     // Generate unique key for each test
     key = generateKey();
-    const response = await request.post(`${baseURL}/projects`, {
+    const response = await request.post(`${baseURL}/api/projects`, {
       headers,
       data: {
         key,
@@ -43,10 +43,13 @@ test.describe("PRJ-04", () => {
       userId: MEMBER_ID,
       role: "Member",
     };
-    const response = await request.post(`${baseURL}/projects/${key}/members`, {
-      headers: headers,
-      data: payload,
-    });
+    const response = await request.post(
+      `${baseURL}/api/projects/${key}/members`,
+      {
+        headers: headers,
+        data: payload,
+      },
+    );
     expect(response.status()).toBe(201);
     const responseBody = await response.json();
     await validateSchema(
@@ -64,30 +67,33 @@ test.describe("PRJ-04", () => {
       role: "Member",
     };
     const firstResponse = await request.post(
-      `${baseURL}/projects/${key}/members`,
+      `${baseURL}/api/projects/${key}/members`,
       { headers, data: payload },
     );
     expect(firstResponse.status()).toBe(201);
 
     const duplicateResponse = await request.post(
-      `${baseURL}/projects/${key}/members`,
+      `${baseURL}/api/projects/${key}/members`,
       { headers, data: payload },
     );
     expect(duplicateResponse.status()).toBe(409);
   });
 
   test("Admin removes user and return 204 status code", async ({ request }) => {
-    const addMember = await request.post(`${baseURL}/projects/${key}/members`, {
-      headers,
-      data: {
-        userId: MEMBER_ID,
-        role: "Member",
+    const addMember = await request.post(
+      `${baseURL}/api/projects/${key}/members`,
+      {
+        headers,
+        data: {
+          userId: MEMBER_ID,
+          role: "Member",
+        },
       },
-    });
+    );
     expect(addMember.status()).toBe(201);
 
     const removeMember = await request.delete(
-      `${baseURL}/projects/${key}/members/${MEMBER_ID}`,
+      `${baseURL}/api/projects/${key}/members/${MEMBER_ID}`,
       { headers },
     );
     expect(removeMember.status()).toBe(204);
@@ -95,7 +101,7 @@ test.describe("PRJ-04", () => {
 
   test.afterAll(async ({ request }) => {
     // Cleanup project after each test
-    const response = await request.delete(`${baseURL}/projects/${key}`, {
+    const response = await request.delete(`${baseURL}/api/projects/${key}`, {
       headers,
     });
     expect(response.status()).toBe(204);
