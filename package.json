@@ -1,0 +1,40 @@
+{
+  "name": "mockapi_services",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "seed": "node src/script/seed.js",
+    "seed:large": "node src/script/seed-large.js",
+    "mock": "json-server --watch src/mock/db.json  --port 4000 --read-only ",
+    "test/mockoon": "npx playwright test tests/mocks/mockoon.spec.js",
+    "test/wiremock": "npx playwright test tests/mocks/wiremock.spec.js",
+    "test/jsonserver": "npx playwright test tests/mocks/json-server.spec.js",
+    "test": "npx playwright test tests/comments/ tests/issues/ tests/projects/"
+  },
+  "_moduleAliases": {
+    "@": "src"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "axios": "^1.21.1",
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.10",
+    "express": "^5.3.0",
+    "module-alias": "^2.3.5",
+    "mongoose": "^9.12.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.65.1",
+    "@types/node": "^26.6.6",
+    "cross-env": "^10.1.0",
+    "json-server": "^0.17.4",
+    "playwright-ajv-schema-validator": "^1.0.2",
+    "yaml": "^2.9.1"
+  }
+}
