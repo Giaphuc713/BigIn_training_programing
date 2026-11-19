@@ -1,0 +1,10 @@
+{
+  "scenarioName": "create-then-list",
+  "requiredScenarioState": "Started",
+  "request": { "method": "GET", "urlPath": "/api/projects/STATE/issues" },
+  "response": {
+    "status": 200,
+    "headers": { "Content-Type": "application/json" },
+    "jsonBody": { "items": [], "total": 0, "page": 1, "pageSize": 20 }
+  }
+}

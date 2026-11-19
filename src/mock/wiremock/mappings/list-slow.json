@@ -1,0 +1,9 @@
+{
+  "request": { "method": "GET", "urlPath": "/api/projects/SLOW/issues" },
+  "response": {
+    "status": 200,
+    "fixedDelayMilliseconds": 3000,
+    "headers": { "Content-Type": "application/json" },
+    "jsonBody": { "items": [], "total": 0, "page": 1, "pageSize": 20 }
+  }
+}

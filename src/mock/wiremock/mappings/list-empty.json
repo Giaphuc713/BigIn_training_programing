@@ -1,0 +1,8 @@
+{
+  "request": { "method": "GET", "urlPath": "/api/projects/EMPTY/issues" },
+  "response": {
+    "status": 200,
+    "headers": { "Content-Type": "application/json" },
+    "jsonBody": { "items": [], "total": 0, "page": 1, "pageSize": 20 }
+  }
+}

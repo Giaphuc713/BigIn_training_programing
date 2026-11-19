@@ -1,0 +1,8 @@
+{
+  "request": { "method": "GET", "urlPath": "/api/projects/WEB/issues" },
+  "response": {
+    "status": 200,
+    "headers": { "Content-Type": "application/json" },
+    "bodyFileName": "issues-list.json"
+  }
+}

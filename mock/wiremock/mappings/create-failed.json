@@ -1,0 +1,10 @@
+{
+  "request": { "method": "POST", "urlPath": "/api/projects/FAIL/issues" },
+  "response": {
+    "status": 500,
+    "headers": { "Content-Type": "application/json" },
+    "jsonBody": {
+      "error": { "code": "INTERNAL_ERROR", "message": "Internal server error" }
+    }
+  }
+}

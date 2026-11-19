@@ -1,0 +1,43 @@
+{
+  "items": [
+    {
+      "_id": "6500000000000000000000e2",
+      "projectId": "6300000000000000000000b1",
+      "number": 2,
+      "key": "WEB-2",
+      "type": "Bug",
+      "title": "Fix typo on home page",
+      "status": "Done",
+      "priority": "Low",
+      "assigneeId": "6400000000000000000000a2",
+      "reporterId": "6400000000000000000000a2",
+      "labels": ["frontend"],
+      "storyPoints": 1,
+      "dueDate": null,
+      "resolvedAt": "2026-11-12T15:00:00.000Z",
+      "createdAt": "2026-11-12T09:00:00.000Z",
+      "updatedAt": "2026-11-12T15:00:00.000Z"
+    },
+    {
+      "_id": "6500000000000000000000e1",
+      "projectId": "6300000000000000000000b1",
+      "number": 1,
+      "key": "WEB-1",
+      "type": "Story",
+      "title": "User can log in",
+      "status": "To Do",
+      "priority": "High",
+      "assigneeId": null,
+      "reporterId": "6400000000000000000000a1",
+      "labels": [],
+      "storyPoints": null,
+      "dueDate": null,
+      "resolvedAt": null,
+      "createdAt": "2026-11-11T09:00:00.000Z",
+      "updatedAt": "2026-11-11T09:00:00.000Z"
+    }
+  ],
+  "total": 2,
+  "page": 1,
+  "pageSize": 20
+}

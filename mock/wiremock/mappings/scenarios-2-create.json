@@ -1,0 +1,28 @@
+{
+  "scenarioName": "create-then-list",
+  "requiredScenarioState": "Started",
+  "newScenarioState": "Issue Created",
+  "request": { "method": "POST", "urlPath": "/api/projects/STATE/issues" },
+  "response": {
+    "status": 201,
+    "headers": { "Content-Type": "application/json" },
+    "jsonBody": {
+      "_id": "6500000000000000000000f1",
+      "projectId": "6300000000000000000000b2",
+      "number": 1,
+      "key": "STATE-1",
+      "type": "Task",
+      "title": "Created in scenario",
+      "status": "To Do",
+      "priority": "Medium",
+      "assigneeId": null,
+      "reporterId": "6400000000000000000000a1",
+      "labels": [],
+      "storyPoints": null,
+      "dueDate": null,
+      "resolvedAt": null,
+      "createdAt": "2026-11-19T05:00:00.000Z",
+      "updatedAt": "2026-11-19T05:00:00.000Z"
+    }
+  }
+}
