@@ -9,7 +9,7 @@ const headers = {
 
 test.describe("GET /issues/:issueKey", () => {
   test("ISS-02 Get one issue (happy path)", async ({ request }) => {
-    const response = await request.get(`${baseURL}/issues/${ISSUE_KEY}`, {
+    const response = await request.get(`${baseURL}/api/issues/${ISSUE_KEY}`, {
       headers,
     });
     expect(response.status()).toBe(200);

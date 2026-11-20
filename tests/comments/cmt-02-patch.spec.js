@@ -15,7 +15,7 @@ let commentId;
 test.describe("PATCH /comments/:id", () => {
   test.beforeAll(async ({ request }) => {
     const response = await request.post(
-      `${baseURL}/issues/${ISSUE_KEY}/comments`,
+      `${baseURL}/api/issues/${ISSUE_KEY}/comments`,
       {
         headers,
         data: { body: "comment created for cmt-02" },
@@ -35,7 +35,7 @@ test.describe("PATCH /comments/:id", () => {
   test.afterAll(async ({ request }) => {
     if (!commentId) {
       const response = await request.delete(
-        `${baseURL}/comments/${commentId}`,
+        `${baseURL}/api/comments/${commentId}`,
         { headers },
       );
       expect(response.status()).toBe(204);
@@ -44,7 +44,7 @@ test.describe("PATCH /comments/:id", () => {
   test("Return 403 when request update comment isn't author", async ({
     request,
   }) => {
-    const response = await request.patch(`${baseURL}/comments/${commentId}`, {
+    const response = await request.patch(`${baseURL}/api/comments/${commentId}`, {
       headers: { "X-User-Id": MEMBER_ID },
       data: { body: "updated comment" },
     });
@@ -54,7 +54,7 @@ test.describe("PATCH /comments/:id", () => {
     await validateSchema({ request }, body, schemaDoc.components.schemas.Error);
   });
   test("Update comment by author (happy path)", async ({ request }) => {
-    const response = await request.patch(`${baseURL}/comments/${commentId}`, {
+    const response = await request.patch(`${baseURL}/api/comments/${commentId}`, {
       headers,
       data: { body: "updated comment" },
     });

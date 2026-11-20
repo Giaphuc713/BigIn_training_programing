@@ -17,7 +17,7 @@ test.describe("POST /projects/:key/issues", () => {
   test.beforeAll(async ({ request }) => {
     // Generate unique key for each test
     key = generateKey();
-    const response = await request.post(`${baseURL}/projects`, {
+    const response = await request.post(`${baseURL}/api/projects`, {
       headers,
       data: {
         key,
@@ -38,33 +38,39 @@ test.describe("POST /projects/:key/issues", () => {
   }) => {
     const payload = { title: "Create the firsts issue", type: "Story" };
 
-    const response = await request.post(`${baseURL}/projects/${key}/issues`, {
-      headers,
-      data: payload,
-    });
+    const response = await request.post(
+      `${baseURL}/api/projects/${key}/issues`,
+      {
+        headers,
+        data: payload,
+      },
+    );
 
     expect(response.status()).toBe(201);
     const body = await response.json();
     await validateSchema({ request }, body, schemaDoc.components.schemas.Issue);
   });
 
-  test("[Negative]  - ISS-01 Create issue with type [Drama]", async ({
+  test("[Negative] - ISS-01 Create issue with type [Drama]", async ({
     request,
   }) => {
     const payload = { title: "Create the firsts issue", type: "Drama" };
 
-    const response = await request.post(`${baseURL}/projects/${key}/issues`, {
-      headers,
-      data: payload,
-    });
+    const response = await request.post(
+      `${baseURL}/api/projects/${key}/issues`,
+      {
+        headers,
+        data: payload,
+      },
+    );
     expect(response.status()).toBe(400);
     const body = await response.json();
     await validateSchema({ request }, body, schemaDoc.components.schemas.Error);
   });
 
   test.afterAll(async ({ request }) => {
-    // Cleanup project after each test
-    const response = await request.delete(`${baseURL}/projects/${key}`, {
+    // Cleanup project after all test
+    const response = await request.delete(`${baseURL}/api/projects/${key}`, {
       headers,
     });
     expect(response.status()).toBe(204);

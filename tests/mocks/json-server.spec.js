@@ -12,7 +12,7 @@ test.describe("Mock JSON GET /issues", () => {
   test("A2: returns the issue list with exactly the documented schema keys", async ({
     request,
   }) => {
-    const response = await request.get(`${baseURL}/issues`);
+    const response = await request.get(`${baseURL}/api/issues`);
     expect(response.status()).toBe(200);
     const body = await response.json();
 
@@ -23,8 +23,8 @@ test.describe("Mock JSON GET /issues", () => {
     request,
   }) => {
     const [allResponse, filteredResponse] = await Promise.all([
-      request.get(`${baseURL}/issues`),
-      request.get(`${baseURL}/issues?status=Done`),
+      request.get(`${baseURL}/api/issues`),
+      request.get(`${baseURL}/api/issues?status=Done`),
     ]);
 
     expect(allResponse.status()).toBe(200);

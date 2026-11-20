@@ -18,7 +18,7 @@ test.describe("ISS-06 GET /projects/:key/issues", () => {
     request,
   }) => {
     const response = await request.get(
-      `${baseURL}/projects/${PROJECT_KEY}/issues`,
+      `${baseURL}/api/projects/${PROJECT_KEY}/issues`,
       { headers },
     );
 
@@ -31,7 +31,7 @@ test.describe("ISS-06 GET /projects/:key/issues", () => {
 
   test("ISS-List-02: filters by a valid status", async ({ request }) => {
     const response = await request.get(
-      `${baseURL}/projects/${PROJECT_KEY}/issues`,
+      `${baseURL}/api/projects/${PROJECT_KEY}/issues`,
       { headers, params: { status: "In Progress" } },
     );
 
@@ -47,7 +47,7 @@ test.describe("ISS-06 GET /projects/:key/issues", () => {
 
   test("ISS-LIST-03: Filter by status, priority", async ({ request }) => {
     const response = await request.get(
-      `${baseURL}/projects/${PROJECT_KEY}/issues`,
+      `${baseURL}/api/projects/${PROJECT_KEY}/issues`,
       { headers, params: { status: "In Progress", priority: "Low" } },
     );
     expect(response.status()).toBe(200);
@@ -64,7 +64,7 @@ test.describe("ISS-06 GET /projects/:key/issues", () => {
 
   test("ISS-LIST-04: Sort by priority ", async ({ request }) => {
     const response = await request.get(
-      `${baseURL}/projects/${PROJECT_KEY}/issues`,
+      `${baseURL}/api/projects/${PROJECT_KEY}/issues`,
       {
         headers,
         params: {
@@ -88,7 +88,7 @@ test.describe("ISS-06 GET /projects/:key/issues", () => {
     request,
   }) => {
     const response = await request.get(
-      `${baseURL}/projects/${PROJECT_KEY}/issues`,
+      `${baseURL}/api/projects/${PROJECT_KEY}/issues`,
       {
         headers,
         params: {

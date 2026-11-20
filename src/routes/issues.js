@@ -38,6 +38,7 @@ router.patch("/issues/:issueKey", async (req, res) => {
     "priority",
     "assigneeId",
     "labels",
+    "status",
     "storyPoints",
     "dueDate",
   ]);
